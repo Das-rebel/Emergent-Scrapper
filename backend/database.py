@@ -1,6 +1,9 @@
 from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo import ASCENDING, DESCENDING
 import os
+import sys
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 from datetime import datetime
 from typing import List, Optional, Dict, Any
 from models import ProcessedTweet, ScrapingSession, TweetSearchParams
