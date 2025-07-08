@@ -278,12 +278,22 @@ class TwitterScraper:
     async def process_tweet(self, tweet_data: Dict[str, Any]) -> TweetData:
         """Process individual tweet and extract features"""
         
+        # Handle datetime parsing
+        created_at_str = tweet_data.get('created_at', datetime.utcnow().isoformat())
+        if isinstance(created_at_str, str):
+            try:
+                created_at = datetime.fromisoformat(created_at_str.replace('Z', '+00:00'))
+            except ValueError:
+                created_at = datetime.utcnow()
+        else:
+            created_at = created_at_str if isinstance(created_at_str, datetime) else datetime.utcnow()
+        
         # Create base tweet data
         tweet = TweetData(
-            id=tweet_data.get('id', str(datetime.utcnow().timestamp())),
+            id=tweet_data.get('id', str(int(datetime.utcnow().timestamp()))),
             text=tweet_data.get('text', ''),
             author=tweet_data.get('author', 'unknown'),
-            created_at=datetime.fromisoformat(tweet_data.get('created_at', datetime.utcnow().isoformat())),
+            created_at=created_at,
             url=tweet_data.get('url', ''),
             media_urls=tweet_data.get('media_urls', [])
         )
@@ -291,8 +301,14 @@ class TwitterScraper:
         # Detect media
         tweet.media_info = self.detect_media(tweet_data)
         
-        # Extract Twitter features
-        tweet.twitter_features = self.extract_twitter_features(tweet_data)
+        # Extract Twitter features - pass dict instead of TweetData
+        tweet_dict = {
+            'text': tweet.text,
+            'created_at': tweet.created_at.isoformat(),
+            'author': tweet.author,
+            'url': tweet.url
+        }
+        tweet.twitter_features = self.extract_twitter_features(tweet_dict)
         
         # Calculate scores
         tweet.engagement_potential = self.calculate_engagement_potential(tweet.twitter_features)
