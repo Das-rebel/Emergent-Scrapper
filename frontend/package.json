@@ -11,7 +11,7 @@
     "react-scripts": "5.0.1",
     "lucide-react": "^0.469.0",
     "recharts": "^2.13.3",
-    "date-fns": "^4.2.0",
+    "date-fns": "^3.6.0",
     "react-hot-toast": "^2.6.0"
   },
   "scripts": {
