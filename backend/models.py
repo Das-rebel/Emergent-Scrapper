@@ -148,11 +148,11 @@ class TweetSearchParams(BaseModel):
     offset: int = 0
 
 class TweetAnalyticsResponse(BaseModel):
-    total_tweets: int
-    avg_quality_score: float
-    avg_engagement_score: float
-    sentiment_distribution: Dict[str, int]
-    top_categories: List[Dict[str, Any]]
-    top_authors: List[Dict[str, Any]]
-    media_stats: Dict[str, int]
-    daily_stats: List[Dict[str, Any]]
+    total_tweets: int = 0
+    avg_quality_score: float = 0.0
+    avg_engagement_score: float = 0.0
+    sentiment_distribution: Dict[str, int] = {}
+    top_categories: List[Dict[str, Any]] = []
+    top_authors: List[Dict[str, Any]] = []
+    media_stats: Dict[str, int] = {}
+    daily_stats: List[Dict[str, Any]] = []
