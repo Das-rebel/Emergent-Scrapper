@@ -172,12 +172,23 @@ async def get_tweet(tweet_id: str):
         logger.error(f"Error fetching tweet {tweet_id}: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to fetch tweet: {str(e)}")
 
-@api_router.get("/analytics", response_model=TweetAnalyticsResponse)
+@api_router.get("/analytics")
 async def get_analytics():
     """Get tweet analytics"""
     try:
         analytics = await database.get_tweet_analytics()
-        return TweetAnalyticsResponse(**analytics)
+        # Ensure the response matches the expected format
+        response_data = {
+            "total_tweets": analytics.get("total_tweets", 0),
+            "avg_quality_score": analytics.get("avg_quality_score", 0.0),
+            "avg_engagement_score": analytics.get("avg_engagement_score", 0.0),
+            "sentiment_distribution": analytics.get("sentiment_distribution", {}),
+            "top_categories": analytics.get("top_categories", []),
+            "top_authors": analytics.get("top_authors", []),
+            "media_stats": analytics.get("media_stats", {}),
+            "daily_stats": analytics.get("daily_stats", [])
+        }
+        return response_data
     except Exception as e:
         logger.error(f"Error fetching analytics: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to fetch analytics: {str(e)}")
