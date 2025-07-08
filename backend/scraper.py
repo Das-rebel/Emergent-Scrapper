@@ -379,8 +379,12 @@ class TwitterScraper:
 13. Key insights (max 5)
 14. Discussion worthy (boolean)
 
-Tweet data:
-{json.dumps(tweet_data.dict())}
+Tweet text: {tweet_data.text}
+Author: {tweet_data.author}
+Created: {tweet_data.created_at.isoformat()}
+Media count: {len(tweet_data.media_urls)}
+Has hashtags: {len(tweet_data.twitter_features.hashtags) > 0}
+Word count: {tweet_data.twitter_features.word_count}
 
 Output ONLY valid JSON, no extra text."""
         
