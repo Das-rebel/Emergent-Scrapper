@@ -220,7 +220,16 @@ class TwitterScraper:
     def extract_twitter_features(self, tweet_data: Dict[str, Any]) -> TwitterFeatures:
         """Extract Twitter-specific features from tweet"""
         text = tweet_data.get('text', '')
-        created_at = datetime.fromisoformat(tweet_data.get('created_at', datetime.utcnow().isoformat()))
+        created_at_str = tweet_data.get('created_at', datetime.utcnow().isoformat())
+        
+        # Parse datetime safely
+        if isinstance(created_at_str, str):
+            try:
+                created_at = datetime.fromisoformat(created_at_str.replace('Z', '+00:00'))
+            except ValueError:
+                created_at = datetime.utcnow()
+        else:
+            created_at = created_at_str if isinstance(created_at_str, datetime) else datetime.utcnow()
         
         emoji_pattern = r'[\U0001F600-\U0001F64F\U0001F300-\U0001F5FF\U0001F680-\U0001F6FF\U0001F1E0-\U0001F1FF]+'
         
